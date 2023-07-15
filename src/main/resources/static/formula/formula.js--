@@ -1,0 +1,94 @@
+/**
+ * 获取某一个单元格值
+ * @param cellId
+ * @param $tr
+ * @returns
+ */
+function findValue(cellId,$tr){
+	if($tr){
+		var $td=$tr.find("td[cellid='"+cellId+"']");
+		var v=$td.text();
+		return parseFloat(v);
+	}else{
+		var $td=$("td[cellid='"+cellId+"']");
+		var v=$td.text();
+		return parseFloat(v);
+	}
+}
+/**
+ * 表达式计算
+ * @param formulaStr
+ * @param $tr
+ * @returns
+ */
+function formulaStrCalculate(formulaStr,$tr){
+	var f=formulaStr.replace(/{{(\w*)}}/g,function(fullStr,cellid){
+		return "findValue('"+cellid+"',"+$tr+")";
+	});
+	return eval(f);
+}
+/**
+ * 求和计算
+ * @returns
+ */
+function sum(formulaStr){
+	var sum;
+	if(formulaStr.indexOf("SUM")!=-1){
+		var f=formulaStr.replace(/{{(\w*)}}/g,function(fullStr,cellid){
+			return cellid;
+		});
+		var firstCellId=f.substring(4,7);
+		$.each($("td[cellid='"+firstCellId+"'"),function(i,v){
+			$tr=$(v).parent;
+			formulaStr=formulaStr.substring(4,formulaStr.length-1);
+			sum+=formulaStrCalculate(formulaStr,$tr);
+		});
+	}
+	return sum;
+}
+/**
+ * 获取公式反向列表
+ * @returns
+ */
+function getFormulaMap(){
+	$.get('/avplan/formula/formula.json',function(data){
+		var formulaMap = {};
+		$.each(data,function(key,value){
+			retr = value.match(/(?<={{)(\w*)(?=}})/g);
+			$.each(retr,function(index,cellid){
+				if(formulaMap[cellid] == null){
+					formulaMap[cellid]={};
+				}
+				formulaMap[cellid][key]= value;;
+			});
+		});
+		console.log(formulaMap);
+		return formulaMap;
+	});	
+}
+//同步数据时公式更新
+function formulaCalcuate(cell){
+	if(cell){
+		var cellid = cell.attr("cellid");
+		if(cellid){
+			$tr=$("td[cellid='"+cellid+"'").parent();
+			var formulaMap=getFormulaMap();
+			var formulaStrMap=formulaMap[cellid];
+			if(formulaStrMap){
+				for(var cellId in formulaStrMap){
+					var formulaStr=formulaStrMap[cellId];
+					var r;
+					if(formulaStr.indexOf("SUM")){
+						r=sum(formulaStr);
+					}else{
+						r=formulaStrCalculate(formulaStr,$tr)
+					}
+					if(r){
+						__excel.setCellValue(cellid,r);
+					}
+				}
+			}
+			
+		}
+	}
+}

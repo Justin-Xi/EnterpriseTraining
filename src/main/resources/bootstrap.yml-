@@ -1,0 +1,279 @@
+# 项目相关配置
+asp:
+  # 名称
+  name: ASP
+  # 版本
+  version: 2.0.0
+  # 版权年份
+  copyrightYear: 2021
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/asp/uploadPath，Linux配置 /home/asp/uploadPath）
+  profile: D:\dev\uploadPath
+  # 获取ip地址开关
+  addressEnabled: false
+  #swagger页面
+  swaggerEnabled: true
+  #系统日志记录
+  sysOperLogEnabled: false
+  #审计日志记录
+  auditLogEnabled: false
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 6023
+  servlet:
+    # 应用的访问路径dev-api
+    context-path: /pdm
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+# Spring配置
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: pdm-server
+    #配置nacos相关
+  cloud:
+    nacos:
+      #服务发现
+      discovery:
+        enabled: true
+        server-addr: 10.0.37.243:8848
+        namespace:
+        #username: nacos
+        #password: naocs
+      #配置中心
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        #username: nacos
+        #password: naocs
+        # Nacos 配置中心的namespace。使用public时留空即可
+        namespace:
+        file-extension: yaml
+        # Nacos 配置中心的Group。缺省值为DEFAULT_GROUP
+        group: DEFAULT_GROUP
+  #配置链路跟踪相关
+  zipkin:
+    enabled: false
+    base-url: http://10.0.37.243:9411 #指定Zipkin server地址
+  sleuth:
+    enabled: false
+    sampler.percentage: 1.0 #request采样率
+  # 资源信息
+  messages:
+    # 国际化资源文件路径messages_en_US  messages_zh_CN
+    basename: i18n/messages
+  profiles:
+    active: mysql
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size:  4000MB
+      # 设置总上传的文件大小
+      max-request-size:  4000MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  # redis 配置
+  redis:
+    # 地址
+    host: 10.0.37.243
+    # 端口，默认为6379
+    port: 6379
+    #密码
+    password: 123456
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池的最大数据库连接数
+        max-active: 8
+        # #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+  mvc:
+    static-path-pattern: /static/**
+    pathmatch:
+      use-suffix-pattern: false
+      use-registered-suffix-pattern: true
+    contentnegotiation:
+      favor-path-extension: false
+  #事件相关配置
+  rabbitmq:
+    host: 10.0.34.57
+    port: 5672
+    username: guest
+    password: guest
+    #确认消息已发送到交换机(Exchange)
+    publisher-confirm-type: correlated
+    #确认消息已发送到队列(Queue)
+    publisher-returns: true
+    template:
+      reply-timeout: 60000
+    listener:
+      type: simple
+      simple:
+        acknowledge-mode: manual #消费端收到消息后的确认方式 manual手动确认  none自动确认
+        prefetch: 1 #消费者预取1条数据到内存
+        default-requeue-rejected: false
+        auto-startup: false
+      direct:
+        auto-startup: false
+# 日志配置
+logging:
+  consoleFilterLevel: debug
+  #  config: classpath:logback-logstash.xml # 使用logback-logstash.xml日志配置文件，将日志集成到elk中
+  logstash:
+    server-addr: 10.0.37.243:9061
+  level:
+    com.bjsasc: info
+    org.springframework: warn
+
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 20000
+        read-timeout: 20000
+restTemplate:
+  readTimeout: 20000
+  connectTimeout: 20000
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌秘钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+drap_platform:
+  sso_server:
+    #UIMS application name
+    servicename: DRAP-BOOT-SSO-SERVER
+    # 统一权限地址【OAuth2 Server根地址(外网，用于浏览器跳转登录)】
+    rootpath_proxy: http://10.0.37.243:9080
+    # 统一权限地址【OAuth2 Server根地址(内网，用于服务间调用接口)】
+    rootpath: http://10.0.37.243:9080
+    # 前端地址
+    frontpath: http://sxpdm.bjsasc.com:8023/pdm/
+    # 外部服务地址
+    ext_frontpath:
+    # 应用ID
+    app_id: sx-pdm-server
+    # 应用回调地址【业务系统后端地址+/oauth2/callback】
+    login_target: http://server.sxpdm.bjsasc.com:6023/pdm/oauth2/callback
+    # 应用密钥
+    privatekey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCBmugRzdkk665jZTdBOWnU+sMn8POqll6RZMF/tgv9jBj2joaNiFY8ylolzDCvACN8uloDxTE6sn7bDWOEXoLlFDIUJ6EliljiaT88XdZWWV3o+anXr+l4xGIUPtKMYi3xJDyUbiJVAtjO0kl6DpknBrmMu5yQmN4PRDjm7waNcEqv2kKwILapj99di05qAVOd/d7Awv4KcopMd8hG/VVbuR7+UY23NQN1RiWTJurFU0n8YVWkCSG5hUqxYK1lw3b0QneXa/F6hAagZ4Hs53ZnGtKt+58IPjpP5RN0y7TUW2fMgL/FYY1nRwZSM+a6SeiTOuqsnErpH7lIdZn0w6YjAgMBAAECggEAYZcHEAD0dPySP33DcXWN3zVDJhwlHlpDsy8vFL87oBuR4HXJk2EJrpSf9L4gGmX8UrrvdM9TFmO5abBXMyEHZv8iBlMg4GegLjwZxZbTAgog0IDOBv8Kykj1oVD8sYBsH5utkgasC18tae6mLSY45E4IAZRze93ft5cjUaDCSlUXe9DrJ3nhH3LLtmgvuUCDqhQVFFkRFDYzgc/5cxEJ9mb4hRe9v/bL6NutoFb22CbE2WW1tDHSWA99+NIYmGgX5Yeod+CMkOONTfEThm3zKWOlK3VQNtXMlmtE7Q5/T/Sra++I9GE7kSOXkHGqL3x+fcfBNKJ7DQ5TvvV4oV+oYQKBgQD5+Z8L6OZh2vqzNDjaEaZNHi0zHUKgX0NBKNn2U+0bBugn6tr7gj3DLtzvNseWqXFtyMhOwWSlht+QdAxLDao0ZMkpB3QChh282ARX7Dwz7u+x27yY80HlrR3pv4wT/u3U4kcPIA+DZf1Xv9AYrr8EqGncJinpDAngv4nLPzFyxwKBgQCEupY7PNDqSY0ViXsYBLAeaUgC7yWdvWhPTU6ec5RiDQOvZzYQRKvSxqbZddndcN5JLsqFjsq3HqewMdVcym5LWat+AClhOICb/STNCuQw5aeeU1KdL940KPkHrOOY9N2BezcSIeqZAXqbsEj7QTCNgABvguu7vJ/P9UuNhFQVxQKBgQClAzEIbZ/XLPSdY3W8DjaXZbo0qbYXo4sD8nGfd9tnIfISl6giquEWfVL+3kx2mjf0XrxLsMI9uoDOHK0YxlZ666UW3oKoP9xVksubNqivJ6U25XTkCoCPmu3KJdXURU6+XvjFdUaIWMUaLday1HfoHTx0RQUZgAbtQ8M0VezQdQKBgEoET3D7ajmtCJthDp8HRju/VGQmfuCnVnsazmP4al//h/WR5glOck9ZboRIf1VI8vz2tgOi7JMP6k2MjMJxNO6aM9NRPcI0oyvaEGKz1ysZds8JAkIcBpsp2i4YkNekfb4OO1jGRzBKLdiShzBuWygdoKCO7uzDtI9g6GAj0kxNAoGALrqM9OiT5U78rln3VWFlczuKJ0E5xYQUKJBdIC4sIVcMRIJc0h9fGEnhku/cGKrxzRc5alyvzWjorjOq8bJCPw/a+B0ihGrVaMImpeX0al6qeaG50R55Oxhw0KM6VlEb/dTSil89bBi3NMy6bWeDFpHX2UvXw6cvOaqJddnqpm0=
+    # 应用公钥M
+    public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgZroEc3ZJOuuY2U3QTlp1PrDJ/DzqpZekWTBf7YL/YwY9o6GjYhWPMpaJcwwrwAjfLpaA8UxOrJ+2w1jhF6C5RQyFCehJYpY4mk/PF3WVlld6Pmp16/peMRiFD7SjGIt8SQ8lG4iVQLYztJJeg6ZJwa5jLuckJjeD0Q45u8GjXBKr9pCsCC2qY/fXYtOagFTnf3ewML+CnKKTHfIRv1VW7ke/lGNtzUDdUYlkybqxVNJ/GFVpAkhuYVKsWCtZcN29EJ3l2vxeoQGoGeB7Od2ZxrSrfufCD46T+UTdMu01FtnzIC/xWGNZ0cGUjPmuknokzrqrJxK6R+5SHWZ9MOmIwIDAQAB
+    # 拦截器白名单
+    interceptorsb: /student/**,/fileindex/downloadfile/**,/UIStateFilter/**,/es/**,/login1,/logout1,/dev/1.0/**,/swagger-ui.html,/webjars/**,/swagger-resources/**,/extendsinfo/**,/permission/**,/funServices/**,/tool/**,/res/**,/common/**,/notoken/**,/fss/**,/flow/**,/oauth2/**,/calogin/**,/workflow/**,/core/**,/devtest/**,/business/**,/approve/event/**,/configParam/**,/access/check/trace/**,/markup/callback,/onlyoffice/callback,/persist/clearModelCache,/integration/common/**,/integration/change/**,/integration/approve/**,/attachment/downloadfile/**,/commonProduct/event,/integration/getContext43de/**
+    #routers_beanname: A6UserInfoService
+  auth:
+    identity:
+      serviceId: ${drap_platform.sso_server.app_id}
+      SSO_TOKEN: sso_token
+  oauth2-client:
+    # 应用ID
+    client_id: ${drap_platform.sso_server.app_id}
+    # 应用OAuth2密钥
+    client_sec: 123456
+    # 应用回调地址【业务系统后端地址+/oauth2/callback】
+    callback: ${drap_platform.sso_server.login_target}
+    # 统一权限地址【OAuth2 Server根地址(内网，用于服务间调用接口)】
+    oauth2-server-rootpath: ${drap_platform.sso_server.rootpath}
+    # 统一权限地址【OAuth2 Server根地址(外网，用于浏览器跳转登录)】
+    oauth2-server-rootpath-proxy: ${drap_platform.sso_server.rootpath_proxy}
+  #云存储服务地址
+  storage:
+    fss: http://10.0.37.243:9007
+# MyBatis配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.bjsasc.asp.dev.**.domain,com.bjsasc.plm.**.domain,com.bjsasc.plm.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mybatis/**/*Mapper*.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: false
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
+# 代码生成
+gen:
+  # 作者
+  author: ASP
+  # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
+  packageName: com.bjsasc.avfms.core
+  # 自动去除表前缀，默认是true
+  autoRemovePre: true
+  # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
+  tablePrefix: tbl_b_,tbl_s,gys_,sys_,test_
+
+
+ems:
+  appid: pdm_server #应用标识
+  url: http://10.0.37.243:18080/ems
+  fileserver:
+    location: http://10.0.37.243:9007
+    bucket: pdm-file
+    upload: ${ems.fileserver.location}/openapi/storage/${ems.fileserver.bucket}
+    tempfolder: E://temp
+    isMultiBucket: false
+  context:
+    enable: false
+    app-id: pdm_server
+    app-name: 系统上下文
+    host: 10.0.37.243:18080
+    enable-policy-domain: true  #开启上下文引擎策略域功能
+  rabbit:
+    enable: true
+  contextdriver: uimsservice
+  datastore:
+    digest: true
+  ac_perm:
+    enable: false
+    contextFilter: false
+
+##流程服务地址
+workflow:
+  kuayuURL: http://pdm.bjsasc.com:8023/pdm/#/collaboration/lookComment
+  ancsapihost: http://10.0.37.243:11002/workflow
+  processesNew: false   # 流程定义显示最新版，默认是true即展示最新版流程定义。
+  formmodel:
+    integrate:
+      serverurl: http://10.0.37.243:11002/workflow
+
+#License相关配置
+license:
+  subject: ioserver #主题
+  publicAlias: publicCert #公钥别称
+  storePass: a123456 #访问公钥的密码
+  licensePath: D:\sxWorkspace\licenseTest\license.lic #license位置
+  publicKeysStorePath: D:\sxWorkspace\licenseTest\publicCerts.keystore #公钥位置

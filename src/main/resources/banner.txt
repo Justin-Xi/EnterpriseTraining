@@ -1,0 +1,8 @@
+   ,--.   ,--.
+   \  /-~-\  /
+    )' a a `(
+   (  ,---.  )
+    `(_o_o_)'
+      )`-'(
+Application Version: ${asp.version}
+Spring Boot Version: ${spring-boot.version}

@@ -1,0 +1,11 @@
+{
+	"C3":"{{C2}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	"D3":"{{D2}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	"E3":"{{E2}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	"F3":"{{F2}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	
+	"C5":"{{C4}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	"D5":"{{D4}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	"E5":"{{E4}}*__excel.getCellValue('fee___projprofitmargin')/100",
+	"F5":"{{F4}}*__excel.getCellValue('fee___projprofitmargin')/100"
+}
