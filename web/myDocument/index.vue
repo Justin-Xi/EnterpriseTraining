@@ -12,7 +12,7 @@
         <el-button type="danger" @click="deleteDocument(selection)">删除文档</el-button>
       </el-col>
       <el-col :span="4">
-        <el-select v-model="value" placeholder="请选择搜索项目">
+        <el-select v-model="searchSelect" placeholder="请选择搜索项目" @change="$forceUpdate()">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -31,7 +31,7 @@
         </el-input>
       </el-col>
       <el-col :span="2">
-        <el-button icon="el-icon-search" circle>
+        <el-button icon="el-icon-search" circle @click="search">
       </el-button></el-col>
     </el-row>
 
@@ -296,7 +296,11 @@
       label="文档名称"
       width="347">
       <template slot-scope="scope">
-        <el-link herf="">{{scope.row.name}}</el-link>
+        <router-link :to="{name:'',params:{id:scope.row.id}}">
+          <span>
+            {{ scope.row.name }}
+          </span>
+        </router-link>
       </template>
     </el-table-column>
     <el-table-column
@@ -369,6 +373,7 @@ export default {
         label:'上下文'
       }
     ],
+    searchSelect:'',
     dialogFormVisible:false,
     formLots:{
       context:'',
@@ -405,7 +410,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -413,7 +419,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -421,7 +428,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -429,7 +437,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -437,7 +446,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -445,7 +455,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -453,7 +464,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -461,7 +473,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -469,7 +482,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -477,7 +491,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -485,7 +500,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -493,7 +509,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -501,7 +518,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -509,7 +527,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -517,7 +536,8 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       },{
         name:'测试文档',
         id:'t-1-1',
@@ -525,13 +545,17 @@ export default {
         creator:'行一',
         date:'2023-7-15',
         context:'上下文',
-        remark:'无'
+        remark:'无',
+        url:''
       }]
     }
   },
   methods:{
     jumpToDetail(){
       this.$router.push('/detail')
+    },
+    getData(){
+      //从后端获取文档
     },
     addDocumentDetail(){
       this.documentDetail.push({
@@ -575,7 +599,29 @@ export default {
     },
     refresh(){
       //刷新页面函数
-
+      location.reload();
+    },
+    search(way,target){
+      switch(way){
+        case '1':
+          //按照名称查
+          break;
+        case '2':
+          //按编号
+          break;
+        case '3':
+          //按类型
+          break;
+        case '4':
+          //按创建者
+          break;
+        case '5':
+          //按日期
+          break;
+        case '6':
+          //按上下文
+      }
+      this.refresh();
     }
   }
 }
