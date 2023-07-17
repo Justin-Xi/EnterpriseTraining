@@ -9,7 +9,7 @@
         <el-button type="primary" @click="dialogFormVisible=true">新增多个文档</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button type="danger">删除文档</el-button>
+        <el-button type="danger" @click="deleteDocument(selection)">删除文档</el-button>
       </el-col>
       <el-col :span="4">
         <el-select v-model="value" placeholder="请选择搜索项目">
@@ -35,6 +35,7 @@
       </el-button></el-col>
     </el-row>
 
+    <!--新建单个文档表单-->
     <el-dialog title="新建单个文档" :visible.sync="singleFormDialog" center="true">
       <el-form ref="formSingle" :model="formSingle">
         <el-form-item label="上下文">
@@ -65,7 +66,7 @@
             </el-col>
           </el-row>
           <el-table 
-            :data="files"
+            :data="formSingle.files"
             style="width:100%">
             <el-table-column
               type="selection"
@@ -140,6 +141,7 @@
     </el-dialog>
 
     
+    <!--新建多文档表单-->
     <el-dialog title="新建多个文档" :visible.sync="dialogFormVisible" id="createLots">
       <el-form ref="formLots" :model="formLots">
         <el-form-item label="上下文">
@@ -181,14 +183,84 @@
           </el-select>
         </el-form-item>
         <el-form-item label="文档">
-          <el-row>
-            <el-col :span="2">
-              <el-button>增加</el-button>
-            </el-col>
-            <el-col :span="2">
-              <el-button>删除</el-button>
-            </el-col>
-          </el-row>
+          <template>
+            <el-row>
+              <el-col :span="3">
+                <el-button @click="addDocumentDetail">增加</el-button>
+              </el-col>
+              <el-col :span="3">
+                <el-button @click="deleteDocumentDetail(selection)">删除</el-button>
+              </el-col>
+            </el-row>
+            <el-table
+            :data="documentDetail"
+            style="width: 100%;"
+            @selection-change="handleAddDocumentSelectionChange"
+            id="documentAdd">
+              <el-table-column
+                type="selection"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="名称">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.name"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="id"
+                label="编号">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.id"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="model"
+                label="模板">
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.model">
+                    <el-option label="不选择" value="0"></el-option>
+                    <el-option label="模板一" value="1"></el-option>
+                    <el-option label="模板二" value="2"></el-option>
+                    <el-option label="模板三" value="3"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+                
+              <el-table-column
+                prop="file_name"
+                label="文件名称">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.file_name"></el-input>
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                prop="file_locate"
+                label="文件位置">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.file_locate"></el-input>
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                prop="locate"
+                label="文档位置">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.locate"></el-input>
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                prop="page"
+                label="页数">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.page"></el-input>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -199,14 +271,16 @@
 
     
 
+    <!--列表页面表格-->
     <el-table 
     stripe="true"
     max-height="500px"
     ref="multipleTable"
-    :data="tableData"
+    v-loading="loading"
+    :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
     tooltip-effect="dark"
     style="width: 100%"
-    @selection-change="handleSelectionChange">
+    @selection-change="handleDocumentListSelectionChange">
     <el-table-column
       fixed="left"
       type="selection"
@@ -221,6 +295,9 @@
       prop="name"
       label="文档名称"
       width="347">
+      <template slot-scope="scope">
+        <el-link herf="">{{scope.row.name}}</el-link>
+      </template>
     </el-table-column>
     <el-table-column
       prop="id"
@@ -254,16 +331,22 @@
       width="250">
     </el-table-column>
   </el-table>
-  <el-pagination
-  background
-  layout="prev, pager, next"
-  :total="1000">
-</el-pagination>
+  <div style="text-align:center">
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size="pageSize"
+      :total="total"
+      @current-change="handleCurrentChange">
+    </el-pagination>
+  </div>
   </div>
 </template>
 
 <script>
+import Elinneritem from '@/components/Elinneritem.vue'
 export default {
+  components: { Elinneritem },
   data(){
     return{
       options:[{
@@ -310,7 +393,12 @@ export default {
       tip:''
     },
     input:'',
-      tableData:[{
+    documentDetail:[],
+    currentPage:1,
+    pageSize:9,
+    total:16,
+    loading:false,
+    tableData:[{
         name:'测试文档',
         id:'t-1-1',
         type:'1',
@@ -444,6 +532,50 @@ export default {
   methods:{
     jumpToDetail(){
       this.$router.push('/detail')
+    },
+    addDocumentDetail(){
+      this.documentDetail.push({
+        name:'',
+        id:'',
+        model:'',
+        file_name:'',
+        file_locate:'',
+        locate:'',
+        page:''
+      })
+    },
+    handleAddDocumentSelectionChange(selection){
+      this.selectNum = selection.length;
+      this.selection = selection;
+      console.log(selection);
+    },
+    deleteDocumentDetail(selection){
+      var documents = this.documentDetail;
+      console.log(documents);
+      console.log(selection);
+      for(var i = 0;i<selection.length;i++){
+        for(var j = 0;j<documents.length;j++){
+          if(selection[i].id == documents[j].id){
+            this.documentDetail.splice(j,1);
+            break;
+          }
+        }
+      }
+    },
+    handleCurrentChange(currentPage){
+      this.currentPage=currentPage;
+    },
+    deleteDocument(selection){
+      //删除
+    },
+    handleDocumentListSelectionChange(selection){
+      this.selectNum = selection.length;
+      this.selection = selection;
+      console.log(selection);
+    },
+    refresh(){
+      //刷新页面函数
+
     }
   }
 }
