@@ -57,6 +57,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="文件">
+          <!--
           <el-row>
             <el-col :span="4">
               <el-button>上传文件</el-button>
@@ -89,6 +90,12 @@
               label="文件密级">
             </el-table-column>
           </el-table>
+          -->
+          <template>
+            <AspUpload ref="upload" :fileList='attachmentVos'
+            v-model="fileList" text="上传" :drag="false"
+            :showFileList="true"></AspUpload>
+          </template>
         </el-form-item>
         <el-form-item label="文档名称">
           <el-input v-model="formSingle.name"></el-input>
@@ -136,7 +143,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="singleFormDialog = false">取 消</el-button>
-        <el-button type="primary" @click="singleFormDialog = false">提 交</el-button>
+        <el-button type="primary" @click="addSingleDocument(),singleFormDialog = false,refresh()">提 交</el-button>
       </span>
     </el-dialog>
 
@@ -229,18 +236,12 @@
               </el-table-column>
                 
               <el-table-column
-                prop="file_name"
-                label="文件名称">
+                prop="file"
+                label="文件">
                 <template slot-scope="scope">
-                  <el-input v-model="scope.row.file_name"></el-input>
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                prop="file_locate"
-                label="文件位置">
-                <template slot-scope="scope">
-                  <el-input v-model="scope.row.file_locate"></el-input>
+                  <AspUpload ref="upload" :fileList='attachmentVos'
+                  v-model="scope.row.file" text="上传" :drag="false"
+                  :showFileList="true"></AspUpload>
                 </template>
               </el-table-column>
 
@@ -296,11 +297,7 @@
       label="文档名称"
       width="347">
       <template slot-scope="scope">
-        <router-link :to="{name:'',params:{id:scope.row.id}}">
-          <span>
-            {{ scope.row.name }}
-          </span>
-        </router-link>
+        <p class="text" @click="jumpToDetail(scope.row.id)">{{ scope.row.name }}</p>
       </template>
     </el-table-column>
     <el-table-column
@@ -349,10 +346,32 @@
 
 <script>
 import Elinneritem from '@/components/Elinneritem.vue'
+import AspDev from '@/utils/aspdev'
+const {AspUpload} = AspDev
+class document{
+  constructor(name,id,state,secrecy,company,major,locate,page,context,type,fileList){
+    this.name = name;
+    this.id = id;
+    this.state = state;
+    this.secrecy = secrecy;
+    this.company = company;
+    this.major = major;
+    this.locate = locate;
+    this.page = page;
+    this.context = context;
+    this.type = type;
+    this.fileList = fileList;
+  }
+}
 export default {
-  components: { Elinneritem },
+  components: { 
+    Elinneritem,
+    AspUpload
+   },
   data(){
     return{
+      attachmentVos:[],
+      fileList:[],
       options:[{
         value:'1',
         label:'文档名称'
@@ -551,8 +570,12 @@ export default {
     }
   },
   methods:{
-    jumpToDetail(){
-      this.$router.push('/detail')
+    jumpToDetail(id){
+      this.$router.push({
+        path: '/detail', query: {
+          id: id
+        }
+      })
     },
     getData(){
       //从后端获取文档
@@ -562,8 +585,7 @@ export default {
         name:'',
         id:'',
         model:'',
-        file_name:'',
-        file_locate:'',
+        file:[],
         locate:'',
         page:''
       })
@@ -586,11 +608,35 @@ export default {
         }
       }
     },
+    addSingleDocument(){
+      //获取formSingle数据
+      var document = this.formSingle;
+      var fileList = this.fileList;
+      //提交后端
+
+    },
+    addDocuments(){
+      //获取formLots数据和documentDetail组合
+      let documents = new Array();
+      var documentDetails = this.documentDetail;
+      let commonDetail = this.formLots;
+      for(var i = 0;i<documentDetails.length;i++){
+        var documentDetail = documentDetails[i];
+        documents[i] = new document(documentDetail.name,
+          documentDetail.id,commonDetail.state,commonDetail.secrecy,commonDetail.company,
+          commonDetail.major,documentDetail.locate,documentDetail.page,commonDetail.context,commonDetail.type,documentDetail.file);
+      }
+      //循环向后端添加
+    },
     handleCurrentChange(currentPage){
       this.currentPage=currentPage;
     },
     deleteDocument(selection){
       //删除
+      for(var i = 0;i<selection.length;i++){
+        //逐个删除
+      }
+      this.refresh();
     },
     handleDocumentListSelectionChange(selection){
       this.selectNum = selection.length;
