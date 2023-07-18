@@ -1,10 +1,7 @@
 package com.bjsasc.plm.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.bjsasc.asp.dev.framework.mvc.domain.AjaxResult;
-import com.bjsasc.plm.domain.BaseLine;
-import com.bjsasc.plm.domain.BaseLineLink;
-import com.bjsasc.plm.domain.DocumentVersion;
+import com.bjsasc.plm.domain.*;
 import com.bjsasc.plm.mapper.BaseLineLinkMapper;
 import com.bjsasc.plm.mapper.BaseLineMapper;
 import com.bjsasc.plm.service.BaseLineService;
@@ -31,15 +28,15 @@ public class BaseLineServiceImpl  extends ServiceImpl<BaseLineMapper, BaseLine> 
         return baseLineMapper.getById(id);
     }
     @Override
-    public AjaxResult addDocument(Integer docId, String docVersion, Integer baseLineId) {
+    public Result addDocument(Integer docId, String docVersion, Integer baseLineId) {
         BaseLineLink baselineLink = new BaseLineLink();
         baselineLink.setBaseLineId(baseLineId);
         baselineLink.setDocId(docId);
         baselineLink.setVersionNo(docVersion);
         int insert = baseLineLinkMapper.insert(baselineLink);
         if(insert == 1){
-            return AjaxResult.success();
+            return Result.ok();
         }
-        return AjaxResult.error("添加失败!");
+        return Result.fail("添加失败!");
     }
 }

@@ -12,11 +12,12 @@ import org.apache.commons.net.ntp.TimeStamp;
 import java.io.Serializable;
 import java.util.Date;
 
+
 @Data
-@TableName("baseline")
+@TableName("submission_form")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseLine implements Serializable {
+public class SubmissionForm implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -24,4 +25,5 @@ public class BaseLine implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:SS")
     private Date createTime;
     private String createUser;
+    private String notes;
 }

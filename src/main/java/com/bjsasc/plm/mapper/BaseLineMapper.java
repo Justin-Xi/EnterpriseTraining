@@ -3,6 +3,8 @@ package com.bjsasc.plm.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bjsasc.plm.domain.BaseLine;
 import com.bjsasc.plm.domain.DocumentVersion;
+import com.bjsasc.plm.domain.File;
+import com.bjsasc.plm.domain.Student;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

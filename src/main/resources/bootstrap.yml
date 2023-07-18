@@ -180,7 +180,7 @@ drap_platform:
     # 应用公钥M
     public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgZroEc3ZJOuuY2U3QTlp1PrDJ/DzqpZekWTBf7YL/YwY9o6GjYhWPMpaJcwwrwAjfLpaA8UxOrJ+2w1jhF6C5RQyFCehJYpY4mk/PF3WVlld6Pmp16/peMRiFD7SjGIt8SQ8lG4iVQLYztJJeg6ZJwa5jLuckJjeD0Q45u8GjXBKr9pCsCC2qY/fXYtOagFTnf3ewML+CnKKTHfIRv1VW7ke/lGNtzUDdUYlkybqxVNJ/GFVpAkhuYVKsWCtZcN29EJ3l2vxeoQGoGeB7Od2ZxrSrfufCD46T+UTdMu01FtnzIC/xWGNZ0cGUjPmuknokzrqrJxK6R+5SHWZ9MOmIwIDAQAB
     # 拦截器白名单
-    interceptorsb: /student/**,/fileindex/downloadfile/**,/UIStateFilter/**,/es/**,/login1,/logout1,/dev/1.0/**,/swagger-ui.html,/webjars/**,/swagger-resources/**,/extendsinfo/**,/permission/**,/funServices/**,/tool/**,/res/**,/common/**,/notoken/**,/fss/**,/flow/**,/oauth2/**,/calogin/**,/workflow/**,/core/**,/devtest/**,/business/**,/approve/event/**,/configParam/**,/access/check/trace/**,/markup/callback,/onlyoffice/callback,/persist/clearModelCache,/integration/common/**,/integration/change/**,/integration/approve/**,/attachment/downloadfile/**,/commonProduct/event,/integration/getContext43de/**
+    interceptorsb: /baseline/**,/file/**,/submission/**,/documentMaster/**,/student/**,/fileindex/downloadfile/**,/UIStateFilter/**,/es/**,/login1,/logout1,/dev/1.0/**,/swagger-ui.html,/webjars/**,/swagger-resources/**,/extendsinfo/**,/permission/**,/funServices/**,/tool/**,/res/**,/common/**,/notoken/**,/fss/**,/flow/**,/oauth2/**,/calogin/**,/workflow/**,/core/**,/devtest/**,/business/**,/approve/event/**,/configParam/**,/access/check/trace/**,/markup/callback,/onlyoffice/callback,/persist/clearModelCache,/integration/common/**,/integration/change/**,/integration/approve/**,/attachment/downloadfile/**,/commonProduct/event,/integration/getContext43de/**
     #routers_beanname: A6UserInfoService
   auth:
     identity:
@@ -275,5 +275,5 @@ license:
   subject: ioserver #主题
   publicAlias: publicCert #公钥别称
   storePass: a123456 #访问公钥的密码
-  licensePath: E:\EnterpriseTraining\Space\sxWorkspace\licenseTest\license.lic #license位置
-  publicKeysStorePath: E:\EnterpriseTraining\Space\sxWorkspace\licenseTest\publicCerts.keystore #公钥位置
+  licensePath: D:\sxWorkspace\licenseTest\license.lic #license位置
+  publicKeysStorePath: D:\sxWorkspace\licenseTest\publicCerts.keystore #公钥位置
