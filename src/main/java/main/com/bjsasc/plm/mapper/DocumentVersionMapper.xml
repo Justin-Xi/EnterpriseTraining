@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="main.com.bjsasc.plm.mapper.DocumentVersionMapper">
+
+    <resultMap id="BaseResultMap" type="main.com.bjsasc.plm.domain.DocumentVersion">
+            <id property="versionno" column="versionNo" jdbcType="VARCHAR"/>
+            <result property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="masterid" column="masterId" jdbcType="VARCHAR"/>
+            <result property="modifytime" column="modifyTime" jdbcType="TIMESTAMP"/>
+            <result property="modifyuser" column="modifyUser" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="lifestyle" column="lifeStyle" jdbcType="OTHER"/>
+            <result property="securitylevel" column="securityLevel" jdbcType="OTHER"/>
+            <result property="code" column="code" jdbcType="INTEGER"/>
+            <result property="docform" column="docForm" jdbcType="VARCHAR"/>
+            <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="createuser" column="createUser" jdbcType="VARCHAR"/>
+            <result property="note" column="note" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        versionNo,id,masterId,
+        modifyTime,modifyUser,name,
+        lifeStyle,securityLevel,code,
+        docForm,createTime,createUser,
+        note
+    </sql>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="main.com.bjsasc.plm.mapper.BaselineMapper">
+
+    <resultMap id="BaseResultMap" type="main.com.bjsasc.plm.domain.Baseline">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="creattime" column="creatTime" jdbcType="TIMESTAMP"/>
+            <result property="creatuser" column="creatUser" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,creatTime,creatUser,
+        name
+    </sql>
+
+    <select id="getById" parameterType="String" resultType="DocumentVersion">
+        SELECT * FROM documentversion WHERE masterId IN (SELECT docId FROM baselinelink WHERE baselineId = #{id}) AND documentVerNo IN (SELECT documentVerNo FROM baselinelink WHERE baselineId = #{id} )
+    </select>
+</mapper>
